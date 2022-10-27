@@ -19,16 +19,18 @@ function App() {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const dispatch = useTypedDispatch()
     const [contacts, setContacts] = useState<any[]>([])
+    const [newContact, setNewContact] = useState('')
 
 
     const getContacts = () => {
         axios.get('http://localhost:7402/contacts').then(res => {
+            console.log(res)
             //@ts-ignore
             setContacts(res.data)
         })
     }
     const createNew = () => {
-        axios.post('http://localhost:7402/contacts').then(res => {
+        axios.post('http://localhost:7402/contacts', newContact).then(res => {
                 getContacts()
             }
         )
@@ -65,6 +67,7 @@ function App() {
                     color="inherit">Login</Button></NavLink>}
             {isLoggedIn && <AddContact addContact={addContact}/>}
             <h1>My contacts</h1>
+            <input value={newContact} onChange={(e)=>setNewContact(e.currentTarget.value)}/>
             <button onClick={createNew}>add Contact</button>
             {/*<button onClick={deleteContact}>clear Contact</button>*/}
             {contacts.map((el: { id: number , name: string }, idx: number) => {
